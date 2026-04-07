@@ -275,6 +275,35 @@
             }
 
             // 额外小优化：点击扫码面板内“返回登录”已处理，并避免与tab冲突
+
+            function setFaviconFromStyle() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+
+                // 模拟 CSS radial-gradient: circle at 30% 30%
+                const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 48);
+                gradient.addColorStop(0, '#040404');
+                gradient.addColorStop(0.3, '#6592AA');
+                gradient.addColorStop(0.6, '#104CBC');
+                gradient.addColorStop(1, '#104CBC');
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(32, 32, 32, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // 设置 favicon
+                const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'shortcut icon';
+                link.href = canvas.toDataURL('image/png');
+                document.head.appendChild(link);
+            }
+
+            // 页面加载后执行
+            window.addEventListener('load', setFaviconFromStyle);
         })();
     </script>
     <script src="page/index/script.js"></script>
