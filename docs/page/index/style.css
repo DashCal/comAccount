@@ -1,0 +1,393 @@
+    /* ===== 完全保留原始样式体系，仅新增滑动结构 & 重组组件 ===== */
+    * {
+        -o-user-drag: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        user-select: none;
+        font-family: inherit;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        font-size: 16px;
+    }
+
+    html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        box-sizing: border-box;
+        font-family: Inter, 'Noto Sans', 'Source Han Sans', 'Noto Sans CN', 'Source Han Sans CN', Arial, sans-serif;
+        letter-spacing: -.01em;
+        -o-user-drag: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        user-select: none;
+        align-content: center;
+        flex-wrap: wrap;
+        transition: 0.168s ease;
+    }
+
+    button {
+        width: 100%;
+        padding: .75rem;
+        background: #104CBC;
+        color: #ffffff;
+        border: none;
+        border-radius: .3rem;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    button:hover {
+        background: #0A337A;
+    }
+
+    .appContainer {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        background: -webkit-linear-gradient(top, #000000 0%, #104CBC 20%, #ffffff 46%);
+        background: linear-gradient(180deg, #000000 0%, #104CBC 20%, #ffffff 46%);
+        background-size: contain;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 修正原始类名错误 .floatingContainer → floatingContainer */
+    .floatingContainer {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        /* 让点击穿透到panel，但panel本身可点 */
+    }
+
+    .logo {
+        position: absolute;
+        top: 1.5rem;
+        left: 2rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    .logo .icon {
+        height: 1.5rem;
+        width: 1.5rem;
+        border-radius: 100%;
+        background: #ffffff;
+        background: radial-gradient(1rem, #040404 0%, #6592AA 30%, #104CBC 60%);
+        /* background: radial-gradient(circle at 30% 30%, #fff, #6592AA, #104CBC); */
+    }
+
+    #systemName {
+        font-family: IBM Plex Sans;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #eee;
+        letter-spacing: -.05rem;
+        text-align: left;
+    }
+
+    #systemName i {
+        font-style: normal;
+        text-decoration: none;
+        font-weight: 375;
+        color: transparent;
+        background-image: linear-gradient(25deg, #6592AA 30%, #fff 60%);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+
+    /* 卡片 —— 完全沿用原有设计，只做内部重组 */
+    .panel {
+        position: relative;
+        background-color: #ffffff88;
+        -webkit-backdrop-filter: blur(4rem);
+        backdrop-filter: blur(4rem);
+        box-shadow: 0 2rem 4rem 0 rgba(34, 110, 189, .16);
+        padding: 1.5rem 0;
+        border: .1rem solid #eaeaea;
+        border-radius: .75rem;
+        overflow: hidden;
+        width: 22rem;
+        text-align: center;
+        transition: height 168ms ease;
+        pointer-events: auto;
+    }
+
+    .panel::before {
+        background: linear-gradient(90deg, #6592AA 60%, #104CBC 80%, #000000 100%);
+        border-radius: 0 0 .75rem .75rem;
+        bottom: 0;
+        content: "";
+        height: .5rem;
+        left: 0;
+        opacity: 1;
+        position: absolute;
+        right: 0;
+        transition: opacity .2s ease;
+        width: 100%;
+    }
+
+    /* 头部重组：三个选项卡并排 (登录 / 注册 / 扫码) */
+    .header {
+        padding: 0 1.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+
+    .header .signs {
+        display: flex;
+        gap: .75rem;
+    }
+
+    .header .picker {
+        padding: .25rem;
+        font-weight: 400;
+        color: #555;
+        cursor: pointer;
+    }
+
+    .header .picker:hover {
+        color: #444;
+        font-weight: 500;
+    }
+
+    .header .picker.active {
+        position: relative;
+        color: #111;
+        font-weight: 500;
+        text-shadow: 0 0 1rem #def;
+        cursor: unset;
+    }
+
+    .header .picker.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: .1rem;
+        background: #104CBC;
+        border-radius: 1rem;
+    }
+
+    /* 扫码登录入口融合为第三个picker，保持统一风格 */
+    .header .signs .picker:last-child {
+        /* 无额外特殊 */
+    }
+
+    /* ----- 滑动面板容器 (新增，实现平滑左右移动) ----- */
+    .panel-swiper {
+        overflow: hidden;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        mask: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)
+    }
+
+    .panel-track {
+        display: flex;
+        width: 300%;
+        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+        will-change: transform;
+    }
+
+    .panel-item {
+        width: 33.333%;
+        padding: 0 1.5rem;
+        /* 微调避免溢出 */
+    }
+
+    /* 表单样式 —— 100% 保持原有 */
+    .formGroup {
+        margin-bottom: 1rem;
+        text-align: left;
+    }
+
+    .formGroup label {
+        display: block;
+        margin-bottom: .3rem;
+    }
+
+    .formGroup input {
+        background: #ffffff66;
+        width: 100%;
+        height: 2.5rem;
+        padding: .5rem;
+        box-sizing: border-box;
+        border: .1rem solid #ddd;
+        border-radius: .4rem;
+    }
+
+    .authenToken {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .authenToken button {
+        margin-left: .75rem;
+        max-width: fit-content;
+        max-height: 2.5rem;
+        padding: .5rem;
+        background-color: #104CBC;
+        color: #ffffff;
+        border: none;
+        border-radius: .4rem;
+        cursor: pointer;
+        font-size: .9rem;
+    }
+
+    .authenToken button:hover {
+        background-color: #0A337A;
+    }
+
+    .checkboxes {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: flex-start;
+        justify-content: center;
+        align-items: flex-start;
+        gap: .5rem;
+    }
+
+    .checkboxes .checkItem {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: flex-start;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .checkboxes .checkItem>* {
+        cursor: pointer;
+    }
+
+    .checkboxes input {
+        margin-right: .5rem;
+        height: 1rem;
+        width: 1rem;
+        line-height: 1.25rem;
+    }
+
+    .checkboxes label {
+        font-size: .8rem;
+        line-height: 1.25rem;
+        margin: 0;
+        color: #666666;
+    }
+
+    .checkboxes label a {
+        color: #222;
+        text-decoration: underline;
+    }
+
+    #submit,
+    .submitBtn {
+        padding: .5rem;
+        color: #ffffff;
+        border: none;
+        border-radius: .4rem;
+        cursor: pointer;
+        background: #104CBC;
+    }
+
+    #submit:hover,
+    .submitBtn:hover {
+        background: #0A337A;
+    }
+
+    .errorMessage {
+        height: 2.2rem;
+        line-height: 2.2rem;
+        color: #c90606;
+        font-size: .75rem;
+        text-align: center;
+    }
+
+    .footer {
+        padding: 0 1.5rem;
+        font-size: .75rem;
+        color: #666666;
+    }
+
+    .footer p {
+        margin: .375rem 0;
+    }
+
+    .footLinks a {
+        color: inherit;
+    }
+
+    /* 扫码面板特有内容 (保留原始视觉) */
+    .qr-placeholder {
+        /* background: rgba(255, 255, 255, 0.3); */
+        border-radius: .75rem;
+        padding: 1.2rem 0.8rem;
+        margin-bottom: 0.8rem;
+        /* border: .05rem solid #ddd; */
+    }
+
+    .qr-sim {
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 0.8rem;
+        background: repeating-linear-gradient(45deg, #222 0px, #222 8px, #555 8px, #555 16px);
+        border-radius: .5rem;
+        border: 2px solid white;
+    }
+
+    .qr-panel .hint {
+        font-size: 0.9rem;
+        color: #1e1e2e;
+        font-weight: 450;
+    }
+
+    .qr-panel .sub-hint {
+        font-size: 0.75rem;
+        color: #3a3a4a;
+        margin-top: 0.3rem;
+    }
+
+    #backToLoginLink {
+        text-decoration: none;
+        padding: .5rem 1rem;
+        border: #104CBC 1px solid;
+        border-radius: 100rem;
+        color: #104CBC;
+        text-decoration: underline;
+        font-size: 0.8rem;
+    }

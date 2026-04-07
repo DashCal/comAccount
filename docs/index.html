@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0">
+    <title>Local ID | Local 账户 | LocalWu</title>
+    <link rel="stylesheet" href="page/index/style.css">
+</head>
+
+<body>
+    <div class="appContainer">
+        <div class="logo">
+            <div class="icon"></div>
+            <p id="systemName">Local <i>ID</i></p>
+        </div>
+
+        <!-- 修正类名 -->
+        <div class="floatingContainer">
+            <div class="panel">
+                <!-- 头部: 三个选项卡 —— 登录/注册/扫码，完全重组 -->
+                <div class="header">
+                    <div class="signs">
+                        <span id="tabLogin" class="picker active">登录</span>
+                        <span id="tabRegister" class="picker">注册</span>
+                        <span id="tabQr" class="picker">扫码登录</span>
+                    </div>
+                    <!-- 移除多余的独立扫码入口，已整合 -->
+                </div>
+
+                <!-- 滑动面板区：三个面板左右平滑移动 -->
+                <div class="panel-swiper">
+                    <div class="panel-track" id="panelTrack">
+                        <!-- 登录面板 (索引0) -->
+                        <div class="panel-item" id="loginPanel">
+                            <form id="signInForm" onsubmit="return false;">
+                                <div class="formGroup">
+                                    <input type="text" id="loginUsername" name="username" placeholder="请输入用户名/邮箱"
+                                        spellcheck="false" required>
+                                </div>
+                                <div class="formGroup">
+                                    <input type="password" id="loginPassword" name="password" placeholder="请输入密码"
+                                        required>
+                                </div>
+                                <div class="formGroup authenToken">
+                                    <input type="text" id="loginToken" name="authenToken" placeholder="请输入验证码" required>
+                                    <button type="button" id="sendCodeLogin">发送验证码</button>
+                                </div>
+                                <div class="formGroup checkboxes">
+                                    <div class="checkItem">
+                                        <input type="checkbox" id="loginTerms" name="terms" checked>
+                                        <label for="loginTerms">已阅读并同意<a href="/protocol/agreement">使用协议</a>和<a
+                                                href="/protocol/privacy">隐私政策</a></label>
+                                    </div>
+                                    <div class="checkItem">
+                                        <input type="checkbox" id="loginDevice" name="device">
+                                        <label for="loginDevice">这是我的个人设备</label>
+                                    </div>
+                                </div>
+                                <button id="submit" type="submit">登录</button>
+                            </form>
+                        </div>
+
+                        <!-- 注册面板 (索引1) -->
+                        <div class="panel-item" id="registerPanel">
+                            <form id="signUpForm" onsubmit="return false;">
+                                <div class="formGroup">
+                                    <input type="text" id="regUsername" name="username" placeholder="用户名" required>
+                                </div>
+                                <div class="formGroup">
+                                    <input type="email" id="regEmail" name="email" placeholder="邮箱" required>
+                                </div>
+                                <div class="formGroup">
+                                    <input type="password" id="regPassword" name="password" placeholder="密码" required>
+                                </div>
+                                <div class="formGroup">
+                                    <input type="password" id="regConfirm" name="confirmPassword" placeholder="确认密码"
+                                        required>
+                                </div>
+                                <div class="formGroup authenToken">
+                                    <input type="text" id="regToken" name="authenToken" placeholder="邮箱验证码" required>
+                                    <button type="button" id="sendCodeReg">发送验证码</button>
+                                </div>
+                                <div class="formGroup checkboxes">
+                                    <div class="checkItem">
+                                        <input type="checkbox" id="regTerms" name="terms" checked>
+                                        <label for="regTerms">同意<a href="/protocol/agreement">使用协议</a>和<a
+                                                href="/protocol/privacy">隐私政策</a></label>
+                                    </div>
+                                    <div class="checkItem">
+                                        <input type="checkbox" id="regNews" name="newsletter">
+                                        <label for="regNews">接收产品更新</label>
+                                    </div>
+                                </div>
+                                <button class="submitBtn" type="submit">注册</button>
+                            </form>
+                        </div>
+
+                        <!-- 扫码登录面板 (索引2) -->
+                        <div class="panel-item qr-panel" id="qrPanel">
+                            <div class="qr-placeholder">
+                                <div class="qr-sim"></div>
+                                <div class="hint">使用 App 扫描二维码</div>
+                                <div class="sub-hint">安全便捷 · 无需输入密码</div>
+                            </div>
+                            <p style="margin-top: 0rem; font-size:0.85rem; color:#2c3e50;">
+                                <!-- <span>🔒 扫码后请在手机上确认登录</span> -->
+                            </p>
+                            <p style="margin-top: 2rem;">
+                                <a href="#" id="backToLoginLink" style="">← 返回账号登录</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 错误/提示信息区 -->
+                <p class="errorMessage" id="errorMessage"></p>
+
+                <!-- 底部完全保留原始内容 -->
+                <div class="footer">
+                    <p class="footLinks">
+                        <a href="/pass">通行证</a> |
+                        <a href="/help">帮助</a> |
+                        <a href="/forget">忘记密码</a> |
+                        <a href="/en">English</a>
+                    </p>
+                    <p id="Copyright">Copyright © 2026 LocalWu. Passion Drives.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+
+            // 选项卡元素
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const tabQr = document.getElementById('tabQr');
+            const track = document.getElementById('panelTrack');
+            const errorMsg = document.getElementById('errorMessage');
+
+            // 所有picker
+            const pickers = [tabLogin, tabRegister, tabQr];
+
+            // 返回登录链接 (扫码面板内)
+            const backLink = document.getElementById('backToLoginLink');
+
+            // 切换面板函数 (滑动到对应索引)
+            function slideTo(index) {
+                if (!track) return;
+                // 三个面板，索引0→0%，1→-33.333%，2→-66.666%
+                const percent = index * 33.333;
+                track.style.transform = `translateX(-${percent}%)`;
+
+                // 更新active样式
+                pickers.forEach((p, i) => {
+                    if (i === index) {
+                        p.classList.add('active');
+                    } else {
+                        p.classList.remove('active');
+                    }
+                });
+
+                // 清空错误提示 (切换时)
+                if (errorMsg) errorMsg.textContent = '';
+            }
+
+            // 事件绑定
+            if (tabLogin) tabLogin.addEventListener('click', (e) => { e.preventDefault(); slideTo(0); });
+            if (tabRegister) tabRegister.addEventListener('click', (e) => { e.preventDefault(); slideTo(1); });
+            if (tabQr) tabQr.addEventListener('click', (e) => { e.preventDefault(); slideTo(2); });
+
+            if (backLink) {
+                backLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    slideTo(0);
+                });
+            }
+
+            // 确保初始位置正确 (默认登录)
+            slideTo(0);
+
+            // ---------- 模拟验证码发送 (保留原始交互风格) ----------
+            function setupCodeButton(btnId, relatedInputId, context) {
+                const btn = document.getElementById(btnId);
+                if (!btn) return;
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    let inputValid = true;
+                    let inputEl = null;
+
+                    if (context === 'login') {
+                        inputEl = document.getElementById('loginUsername');
+                        if (!inputEl.value.trim()) {
+                            errorMsg.textContent = '请先填写用户名/邮箱';
+                            inputValid = false;
+                        }
+                    } else if (context === 'register') {
+                        inputEl = document.getElementById('regEmail');
+                        const email = inputEl.value.trim();
+                        if (!email || !email.includes('@')) {
+                            errorMsg.textContent = '请输入有效的邮箱地址';
+                            inputValid = false;
+                        }
+                    }
+
+                    if (!inputValid) return;
+
+                    errorMsg.textContent = '✓ 验证码已发送 (模拟)';
+                    const originalText = btn.textContent;
+                    btn.textContent = '已发送';
+                    btn.disabled = true;
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }, 3000);
+                });
+            }
+
+            setupCodeButton('sendCodeLogin', 'loginUsername', 'login');
+            setupCodeButton('sendCodeReg', 'regEmail', 'register');
+
+            // ---------- 表单提交模拟 (保留原始行为，仅演示) ----------
+            const loginForm = document.getElementById('signInForm');
+            const regForm = document.getElementById('signUpForm');
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('loginUsername').value.trim();
+                    const pwd = document.getElementById('loginPassword').value;
+                    const token = document.getElementById('loginToken').value.trim();
+                    const terms = document.getElementById('loginTerms').checked;
+
+                    if (!username || !pwd || !token) {
+                        errorMsg.textContent = '请完整填写登录信息';
+                        return;
+                    }
+                    if (!terms) {
+                        errorMsg.textContent = '请阅读并同意协议';
+                        return;
+                    }
+                    errorMsg.textContent = '✨ 登录中... (演示环境)';
+                    setTimeout(() => { errorMsg.textContent = '欢迎使用 Local ID (模拟)'; }, 800);
+                });
+            }
+
+            if (regForm) {
+                regForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('regUsername').value.trim();
+                    const email = document.getElementById('regEmail').value.trim();
+                    const pwd = document.getElementById('regPassword').value;
+                    const confirm = document.getElementById('regConfirm').value;
+                    const token = document.getElementById('regToken').value.trim();
+                    const terms = document.getElementById('regTerms').checked;
+
+                    if (!username || !email || !pwd || !confirm || !token) {
+                        errorMsg.textContent = '所有字段均为必填';
+                        return;
+                    }
+                    if (pwd !== confirm) {
+                        errorMsg.textContent = '两次密码不一致';
+                        return;
+                    }
+                    if (!terms) {
+                        errorMsg.textContent = '必须同意用户协议';
+                        return;
+                    }
+                    errorMsg.textContent = '📧 注册请求已提交 (模拟)';
+                    setTimeout(() => { errorMsg.textContent = '注册成功！请登录'; slideTo(0); }, 1200);
+                });
+            }
+
+            // 额外小优化：点击扫码面板内“返回登录”已处理，并避免与tab冲突
+        })();
+    </script>
+    <script src="page/index/script.js"></script>
+</body>
+
+</html>

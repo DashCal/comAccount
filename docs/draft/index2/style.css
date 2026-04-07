@@ -1,0 +1,463 @@
+/* ----- 现代化重置 & 设计变量 ----- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+html {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', 'Noto Sans', 'Source Han Sans', 'Noto Sans CN', 'Source Han Sans CN', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
+    background: #0b0f15;
+    /* 基础底色，实际被渐变覆盖 */
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-size: 16px;
+    background: radial-gradient(circle at 20% 30%, #1a3a5c, #03070e 80%);
+    /* 深邃渐变背景，保留原风格但更现代 */
+}
+
+/* 主容器 —— 继承原风格，优化渐变与居中 */
+.appContainer {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: linear-gradient(145deg, #000000 0%, #0a2540 30%, #1e4a7a 70%, #b0c7e0 100%);
+    background-size: 200% 200%;
+    animation: gradientFlow 18s ease infinite;
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 30%;
+    }
+
+    50% {
+        background-position: 100% 70%;
+    }
+
+    100% {
+        background-position: 0% 30%;
+    }
+}
+
+/* Logo 区域 —— 保留原汁原味，微调间距 */
+.logo {
+    position: absolute;
+    top: 2rem;
+    left: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    z-index: 5;
+}
+
+.logo .icon {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff, #6592AA, #104CBC);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#systemName {
+    font-family: 'IBM Plex Sans', 'Inter', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #f0f4fa;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+#systemName i {
+    font-style: normal;
+    font-weight: 400;
+    background: linear-gradient(135deg, #aac8ff, #ffffff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ----- 浮动卡片 (毛玻璃核心) ----- */
+.floatingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 480px;
+    margin: 2rem auto;
+}
+
+.pannel {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: rgba(20, 30, 45, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(104, 148, 200, 0.1) inset;
+    padding: 2rem 1.8rem;
+    color: #1e1e2a;
+    transition: box-shadow 0.3s ease;
+}
+
+/* 底部装饰条 (原风格保留，优化为渐变光效) */
+.pannel::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #6592AA, #104CBC, #8ab2f0, transparent);
+    border-radius: 3px;
+    opacity: 0.9;
+}
+
+/* ----- 选项卡头部 (登录/注册/扫码) 现代化重组织 ----- */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding: 0 0.2rem;
+}
+
+.signs {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.picker {
+    font-size: 1.2rem;
+    font-weight: 450;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding-bottom: 6px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+.picker:hover {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.picker.active {
+    color: white;
+    font-weight: 550;
+    border-bottom: 2px solid #8ab2f0;
+    text-shadow: 0 0 8px rgba(138, 178, 240, 0.6);
+}
+
+/* 右侧扫码入口 —— 保持独立性 */
+.qr-trigger {
+    font-size: 1rem;
+    font-weight: 450;
+    color: rgba(220, 235, 255, 0.9);
+    background: rgba(16, 76, 188, 0.25);
+    padding: 0.35rem 1rem;
+    border-radius: 40px;
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.qr-trigger:hover {
+    background: #104CBC;
+    color: white;
+    border-color: #8ab2f0;
+}
+
+.qr-trigger.active {
+    background: #104CBC;
+    color: white;
+    box-shadow: 0 0 12px #104cbc80;
+    border-color: #aac8ff;
+}
+
+/* ----- 表单容器 (三个面板切换) ----- */
+.panel-container {
+    position: relative;
+    min-height: 320px;
+}
+
+.form-panel {
+    display: block;
+    transition: opacity 0.2s;
+}
+
+.form-panel.hidden {
+    display: none;
+}
+
+/* 扫码面板单独样式 */
+.qr-panel {
+    text-align: center;
+    padding: 1rem 0 0.5rem;
+}
+
+.qr-placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 24px;
+    padding: 1.8rem 1rem;
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    margin-bottom: 1.5rem;
+}
+
+.qr-code-sim {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 1.2rem;
+    background: repeating-linear-gradient(45deg, #fff 0px, #fff 8px, #aaa 8px, #aaa 16px);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    border: 2px solid white;
+    opacity: 0.9;
+    position: relative;
+}
+
+.qr-code-sim::after {
+    content: "LocalID";
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    right: 0;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    text-shadow: 0 2px 5px black;
+}
+
+.qr-panel .hint {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    margin: 1rem 0 0.5rem;
+}
+
+.qr-panel .footnote {
+    color: #bbd1f0;
+    font-size: 0.8rem;
+    margin-top: 1.2rem;
+}
+
+/* 表单组样式 —— 现代、清晰、保留原有识别度 */
+.formGroup {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.formGroup input {
+    width: 100%;
+    height: 2.8rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    font-size: 1rem;
+    color: white;
+    outline: none;
+    transition: border 0.2s, background 0.2s;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.formGroup input:focus {
+    border-color: #8ab2f0;
+    background: rgba(20, 40, 70, 0.3);
+    box-shadow: 0 0 0 3px rgba(16, 76, 188, 0.2);
+}
+
+.formGroup input::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 300;
+    font-size: 0.95rem;
+}
+
+/* 验证码行 */
+.authenToken {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.authenToken input {
+    flex: 1;
+}
+
+.authenToken button {
+    width: auto;
+    min-width: 100px;
+    padding: 0 1rem;
+    height: 2.8rem;
+    background: rgba(16, 76, 188, 0.8);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.authenToken button:hover {
+    background: #104CBC;
+    border-color: #aac8ff;
+    box-shadow: 0 4px 10px rgba(16, 76, 188, 0.4);
+}
+
+/* 复选框组 */
+.checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 1.2rem 0 1.5rem;
+}
+
+.checkItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+}
+
+.checkItem input[type="checkbox"] {
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: #104CBC;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.checkItem label {
+    cursor: pointer;
+    font-weight: 400;
+    margin: 0;
+}
+
+.checkItem a {
+    color: #d0e2ff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.checkItem a:hover {
+    color: white;
+}
+
+/* 提交按钮 */
+#submit,
+.submitBtn {
+    width: 100%;
+    padding: 0.9rem;
+    background: #104CBC;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 1.1rem;
+    font-weight: 550;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 8px 18px rgba(16, 76, 188, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+}
+
+#submit:hover,
+.submitBtn:hover {
+    background: #0A337A;
+    transform: scale(1.01);
+    box-shadow: 0 6px 16px #0a337a80;
+}
+
+/* 错误消息区域 */
+.errorMessage {
+    min-height: 2.4rem;
+    line-height: 2.4rem;
+    color: #ffb0b0;
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 450;
+    text-shadow: 0 1px 4px black;
+}
+
+/* 底部链接 */
+.footer {
+    margin-top: 1.8rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.footLinks {
+    margin-bottom: 0.5rem;
+}
+
+.footLinks a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    margin: 0 2px;
+}
+
+.footLinks a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+#Copyright {
+    opacity: 0.7;
+    font-size: 0.75rem;
+}
+
+/* 辅助布局 */
+.register-field-note {
+    margin-top: -0.2rem;
+    margin-bottom: 1rem;
+}
+
+/* 注册专用确认密码等 */
+.formGroup.confirm-password {
+    margin-bottom: 0.8rem;
+}
+
+/* 移动端优化 */
+@media (max-width: 480px) {
+    .pannel {
+        padding: 1.8rem 1.2rem;
+    }
+
+    .logo {
+        top: 1rem;
+        left: 1.2rem;
+    }
+}
