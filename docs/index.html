@@ -27,6 +27,7 @@
                         <span id="tabLogin" class="picker active">登录</span>
                         <span id="tabRegister" class="picker">注册</span>
                         <span id="tabQr" class="picker">扫码登录</span>
+                        <span id="tabSSO" class="picker">统一SSO</span>
                     </div>
                     <!-- 移除多余的独立扫码入口，已整合 -->
                 </div>
@@ -36,7 +37,7 @@
                     <div class="panel-track" id="panelTrack">
                         <!-- 登录面板 (索引0) -->
                         <div class="panel-item" id="loginPanel">
-                            <form id="signInForm" onsubmit="return false;">
+                            <form class="form" id="signInForm" onsubmit="return false;">
                                 <div class="formGroup">
                                     <input type="text" id="loginUsername" name="username" placeholder="请输入用户名/邮箱"
                                         spellcheck="false">
@@ -65,7 +66,7 @@
 
                         <!-- 注册面板 (索引1) -->
                         <div class="panel-item" id="registerPanel">
-                            <form id="signUpForm" onsubmit="return false;">
+                            <form class="form" id="signUpForm" onsubmit="return false;">
                                 <div class="formGroup">
                                     <input type="text" id="regUsername" name="username" placeholder="用户名">
                                 </div>
@@ -99,7 +100,7 @@
 
                         <!-- 扫码登录面板 (索引2) -->
                         <div class="panel-item qr-panel" id="qrPanel">
-                            <div id="qrForm">
+                            <div class="form" id="qrForm">
                                 <div class="qr-placeholder">
                                     <div class="qr-sim"></div>
                                     <div class="hint">使用 App 扫描二维码</div>
@@ -111,6 +112,20 @@
                                 <a href="#" id="backToLoginLink" style="">← 返回账号登录</a>
                             </div>
                         </div>
+
+                        <!-- 统一SSO面板 (索引3) -->
+                        <div class="panel-item sso-panel" id="ssoPanel">
+                            <div class="form" id="ssoForm">
+                                <div class="sso-placeholder">
+                                    <div class="sso-sim"></div>
+                                    <div class="hint">使用 App 扫描二维码</div>
+                                    <div class="sub-hint">Local ID 统一可信身份认证</div>
+                                </div>
+                                <p style="margin-top: 0rem; font-size:0.85rem; color:#2c3e50;">
+                                    <!-- <span>🔒 扫码后请在手机上确认登录</span> -->
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -120,7 +135,7 @@
                 <!-- 底部完全保留原始内容 -->
                 <div class="footer">
                     <p class="footLinks">
-                        <a href="/pass">通行证</a> |
+                        <a href="/local-id">了解 Local ID</a> |
                         <a href="/help">帮助</a> |
                         <a href="/forget">忘记密码</a> |
                         <a href="/en">English</a>
@@ -139,6 +154,7 @@
             const tabLogin = document.getElementById('tabLogin');
             const tabRegister = document.getElementById('tabRegister');
             const tabQr = document.getElementById('tabQr');
+            const tabSSO = document.getElementById('tabSSO');
             const track = document.getElementById('panelTrack');
             const loginPanel = document.getElementById('loginPanel');
             const registerPanel = document.getElementById('registerPanel');
@@ -146,10 +162,11 @@
             const signInForm = document.getElementById('signInForm');
             const signUpForm = document.getElementById('signUpForm');
             const qrForm = document.getElementById('qrForm');
+            const ssoForm = document.getElementById('ssoForm');
             const errorMsg = document.getElementById('errorMessage');
 
             // 所有picker
-            const pickers = [tabLogin, tabRegister, tabQr];
+            const pickers = [tabLogin, tabRegister, tabQr, tabSSO];
 
             // 返回登录链接 (扫码面板内)
             const backLink = document.getElementById('backToLoginLink');
@@ -158,7 +175,7 @@
             function slideTo(index) {
                 if (!track) return;
                 // 三个面板，索引0→0%，1→-33.333%，2→-66.666%
-                const percent = index * 33.333;
+                const percent = index * 25;
                 track.style.transform = `translateX(-${percent}%)`;
 
                 // 更新active样式
@@ -177,9 +194,10 @@
             }
 
             // 事件绑定
-            if (tabLogin) tabLogin.addEventListener('click', (e) => { e.preventDefault(); slideTo(0); });
-            if (tabRegister) tabRegister.addEventListener('click', (e) => { e.preventDefault(); slideTo(1); });
-            if (tabQr) tabQr.addEventListener('click', (e) => { e.preventDefault(); slideTo(2); });
+            if (tabLogin) tabLogin.addEventListener('click', (e) => { e.preventDefault(); slideTo(0); window.location.hash = '#sign-in'; });
+            if (tabRegister) tabRegister.addEventListener('click', (e) => { e.preventDefault(); slideTo(1); window.location.hash = '#sign-up'; });
+            if (tabQr) tabQr.addEventListener('click', (e) => { e.preventDefault(); slideTo(2); window.location.hash = '#qr-code'; });
+            if (tabSSO) tabSSO.addEventListener('click', (e) => { e.preventDefault(); slideTo(3); window.location.hash = '#sso'; });
 
             if (backLink) {
                 backLink.addEventListener('click', (e) => {
@@ -193,7 +211,7 @@
 
             function updatePanelHeightForIndex(index) {
                 // if (!loginPanel) return;
-                const form = [signInForm, signUpForm, qrForm][index];
+                const form = [signInForm, signUpForm, qrForm, ssoForm][index];
 
                 // 1. 临时禁用过渡，防止闪烁
                 // const oldTransition = track.style.transition;

@@ -211,20 +211,33 @@
         /* height: 300px; */
         overflow: hidden;
         width: 100%;
-        margin-bottom: 0.5rem;
-        mask: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)
+        -webkit-mask: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        mask: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
     }
 
     .panel-track {
         /* height: 300px; */
         transition: height 168ms cubic-bezier(0.2, 0.9, 0.4, 1), transform 345ms cubic-bezier(0.2, 0.9, 0.4, 1);
         display: flex;
-        width: 300%;
+        width: 400%;
+        will-change: transform;
+        -webkit-mask: linear-gradient(to top, transparent 0%, black 6%, black 94%, transparent 100%);
+        mask: linear-gradient(to top, transparent 0%, black 5%, black 100%);
+    }
+
+    .panel-track>* {
         will-change: transform;
     }
 
+    .panel-item .form::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1.5rem;
+    }
+
     .panel-item {
-        width: 33.333%;
+        width: 25%;
         padding: 0 1.5rem;
         /* 微调避免溢出 */
     }
@@ -337,8 +350,9 @@
     }
 
     .errorMessage {
-        height: 2.2rem;
-        line-height: 2.2rem;
+        margin-bottom: 1.5rem;
+        height: 1rem;
+        line-height: 1rem;
         color: #c90606;
         font-size: .75rem;
         text-align: center;
@@ -389,6 +403,42 @@
     }
 
     #qrForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* 扫码面板特有内容 (保留原始视觉) */
+    .sso-placeholder {
+        /* background: rgba(255, 255, 255, 0.3); */
+        border-radius: .75rem;
+        padding: 1.2rem 0.8rem;
+        margin-bottom: 0.8rem;
+        /* border: .05rem solid #ddd; */
+    }
+
+    .sso-sim {
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 0.8rem;
+        background: repeating-linear-gradient(135deg, #222 0px, #222 8px, #555 8px, #555 16px);
+        border-radius: .5rem;
+        border: 2px solid white;
+    }
+
+    .sso-panel .hint {
+        font-size: 0.9rem;
+        color: #1e1e2e;
+        font-weight: 450;
+    }
+
+    .sso-panel .sub-hint {
+        font-size: 0.75rem;
+        color: #3a3a4a;
+        margin-top: 0.3rem;
+    }
+
+    #ssoForm {
         display: flex;
         flex-direction: column;
         align-items: center;
