@@ -9,6 +9,9 @@
 </head>
 
 <body>
+    <noscript>
+        Please enable JavaScript to continue.<br />请开启 JavaScript 支持以继续。
+    </noscript>
     <div class="appContainer">
         <div class="logo">
             <div class="icon"></div>
@@ -29,26 +32,25 @@
                 </div>
 
                 <!-- 滑动面板区：三个面板左右平滑移动 -->
-                <div class="panel-swiper">
+                <div class="panel-swiper" id="panelSwiper">
                     <div class="panel-track" id="panelTrack">
                         <!-- 登录面板 (索引0) -->
                         <div class="panel-item" id="loginPanel">
                             <form id="signInForm" onsubmit="return false;">
                                 <div class="formGroup">
                                     <input type="text" id="loginUsername" name="username" placeholder="请输入用户名/邮箱"
-                                        spellcheck="false" required>
+                                        spellcheck="false">
                                 </div>
                                 <div class="formGroup">
-                                    <input type="password" id="loginPassword" name="password" placeholder="请输入密码"
-                                        required>
+                                    <input type="password" id="loginPassword" name="password" placeholder="请输入密码">
                                 </div>
                                 <div class="formGroup authenToken">
-                                    <input type="text" id="loginToken" name="authenToken" placeholder="请输入验证码" required>
+                                    <input type="text" id="loginToken" name="authenToken" placeholder="请输入验证码">
                                     <button type="button" id="sendCodeLogin">发送验证码</button>
                                 </div>
                                 <div class="formGroup checkboxes">
                                     <div class="checkItem">
-                                        <input type="checkbox" id="loginTerms" name="terms" checked>
+                                        <input type="checkbox" id="loginTerms" name="terms">
                                         <label for="loginTerms">已阅读并同意<a href="/protocol/agreement">使用协议</a>和<a
                                                 href="/protocol/privacy">隐私政策</a></label>
                                     </div>
@@ -65,30 +67,29 @@
                         <div class="panel-item" id="registerPanel">
                             <form id="signUpForm" onsubmit="return false;">
                                 <div class="formGroup">
-                                    <input type="text" id="regUsername" name="username" placeholder="用户名" required>
+                                    <input type="text" id="regUsername" name="username" placeholder="用户名">
                                 </div>
                                 <div class="formGroup">
-                                    <input type="email" id="regEmail" name="email" placeholder="邮箱" required>
+                                    <input type="email" id="regEmail" name="email" placeholder="邮箱">
                                 </div>
                                 <div class="formGroup">
-                                    <input type="password" id="regPassword" name="password" placeholder="密码" required>
+                                    <input type="password" id="regPassword" name="password" placeholder="密码">
                                 </div>
                                 <div class="formGroup">
-                                    <input type="password" id="regConfirm" name="confirmPassword" placeholder="确认密码"
-                                        required>
+                                    <input type="password" id="regConfirm" name="confirmPassword" placeholder="确认密码">
                                 </div>
                                 <div class="formGroup authenToken">
-                                    <input type="text" id="regToken" name="authenToken" placeholder="邮箱验证码" required>
+                                    <input type="text" id="regToken" name="authenToken" placeholder="邮箱验证码">
                                     <button type="button" id="sendCodeReg">发送验证码</button>
                                 </div>
                                 <div class="formGroup checkboxes">
                                     <div class="checkItem">
-                                        <input type="checkbox" id="regTerms" name="terms" checked>
-                                        <label for="regTerms">同意<a href="/protocol/agreement">使用协议</a>和<a
+                                        <input type="checkbox" id="regTerms" name="terms">
+                                        <label for="regTerms">已阅读并同意<a href="/protocol/agreement">使用协议</a>和<a
                                                 href="/protocol/privacy">隐私政策</a></label>
                                     </div>
                                     <div class="checkItem">
-                                        <input type="checkbox" id="regNews" name="newsletter">
+                                        <input type="checkbox" id="regNews" name="newsletter" checked>
                                         <label for="regNews">接收产品更新</label>
                                     </div>
                                 </div>
@@ -98,17 +99,17 @@
 
                         <!-- 扫码登录面板 (索引2) -->
                         <div class="panel-item qr-panel" id="qrPanel">
-                            <div class="qr-placeholder">
-                                <div class="qr-sim"></div>
-                                <div class="hint">使用 App 扫描二维码</div>
-                                <div class="sub-hint">安全便捷 · 无需输入密码</div>
-                            </div>
-                            <p style="margin-top: 0rem; font-size:0.85rem; color:#2c3e50;">
-                                <!-- <span>🔒 扫码后请在手机上确认登录</span> -->
-                            </p>
-                            <p style="margin-top: 2rem;">
+                            <div id="qrForm">
+                                <div class="qr-placeholder">
+                                    <div class="qr-sim"></div>
+                                    <div class="hint">使用 App 扫描二维码</div>
+                                    <div class="sub-hint">安全便捷 · 无需输入密码</div>
+                                </div>
+                                <p style="margin-top: 0rem; font-size:0.85rem; color:#2c3e50;">
+                                    <!-- <span>🔒 扫码后请在手机上确认登录</span> -->
+                                </p>
                                 <a href="#" id="backToLoginLink" style="">← 返回账号登录</a>
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -139,6 +140,12 @@
             const tabRegister = document.getElementById('tabRegister');
             const tabQr = document.getElementById('tabQr');
             const track = document.getElementById('panelTrack');
+            const loginPanel = document.getElementById('loginPanel');
+            const registerPanel = document.getElementById('registerPanel');
+            const qrPanel = document.getElementById('qrPanel');
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+            const qrForm = document.getElementById('qrForm');
             const errorMsg = document.getElementById('errorMessage');
 
             // 所有picker
@@ -163,6 +170,8 @@
                     }
                 });
 
+                updatePanelHeightForIndex(index);
+
                 // 清空错误提示 (切换时)
                 if (errorMsg) errorMsg.textContent = '';
             }
@@ -181,6 +190,28 @@
 
             // 确保初始位置正确 (默认登录)
             slideTo(0);
+
+            function updatePanelHeightForIndex(index) {
+                // if (!loginPanel) return;
+                const form = [signInForm, signUpForm, qrForm][index];
+
+                // 1. 临时禁用过渡，防止闪烁
+                // const oldTransition = track.style.transition;
+                // track.style.transition = 'none';
+
+                // 2. 将高度设为 auto，让浏览器计算真实内容高度
+                form.style.height = 'auto';
+
+                // 3. 读取当前渲染后的高度（触发强制重排）
+                const targetHeight = form.offsetHeight;
+                console.log('targetHeight:', targetHeight);
+
+                // 4. 恢复过渡，并将高度固定为刚才读取的值
+                // track.style.transition = oldTransition;
+                track.style.height = targetHeight + 'px';
+
+                // 此时浏览器会从当前 auto 计算出的高度平滑过渡到固定值（尽管值相同，但已经可以触发后续变化）
+            }
 
             // ---------- 模拟验证码发送 (保留原始交互风格) ----------
             function setupCodeButton(btnId, relatedInputId, context) {

@@ -10,11 +10,11 @@
         margin: 0;
     }
 
-    body {
+    html {
         font-size: 16px;
     }
 
-    html {
+    body {
         margin: 0;
         padding: 0;
         height: 100%;
@@ -32,6 +32,7 @@
         align-content: center;
         flex-wrap: wrap;
         transition: 0.168s ease;
+        -webkit-tap-highlight-color: transparent;
     }
 
     button {
@@ -77,6 +78,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        padding-top: 5rem;
         pointer-events: none;
         /* 让点击穿透到panel，但panel本身可点 */
     }
@@ -128,7 +130,7 @@
         -webkit-backdrop-filter: blur(4rem);
         backdrop-filter: blur(4rem);
         box-shadow: 0 2rem 4rem 0 rgba(34, 110, 189, .16);
-        padding: 1.5rem 0;
+        padding: 1.25rem 0 1.5rem 0;
         border: .1rem solid #eaeaea;
         border-radius: .75rem;
         overflow: hidden;
@@ -183,7 +185,7 @@
     .header .picker.active {
         position: relative;
         color: #111;
-        font-weight: 500;
+        font-weight: 600;
         text-shadow: 0 0 1rem #def;
         cursor: unset;
     }
@@ -206,6 +208,7 @@
 
     /* ----- 滑动面板容器 (新增，实现平滑左右移动) ----- */
     .panel-swiper {
+        /* height: 300px; */
         overflow: hidden;
         width: 100%;
         margin-bottom: 0.5rem;
@@ -213,9 +216,10 @@
     }
 
     .panel-track {
+        /* height: 300px; */
+        transition: height 168ms cubic-bezier(0.2, 0.9, 0.4, 1), transform 345ms cubic-bezier(0.2, 0.9, 0.4, 1);
         display: flex;
         width: 300%;
-        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
         will-change: transform;
     }
 
@@ -234,6 +238,7 @@
     .formGroup label {
         display: block;
         margin-bottom: .3rem;
+        font-size: .9rem;
     }
 
     .formGroup input {
@@ -244,6 +249,7 @@
         box-sizing: border-box;
         border: .1rem solid #ddd;
         border-radius: .4rem;
+        font-size: .9rem;
     }
 
     .authenToken {
@@ -382,6 +388,12 @@
         margin-top: 0.3rem;
     }
 
+    #qrForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     #backToLoginLink {
         text-decoration: none;
         padding: .5rem 1rem;
@@ -390,4 +402,25 @@
         color: #104CBC;
         text-decoration: underline;
         font-size: 0.8rem;
+    }
+
+
+    @media all and (max-width: 30rem) {
+        html {
+            font-size: 15px;
+        }
+
+        .logo {
+            top: 3.5rem;
+        }
+    }
+
+    @media all and (max-width: 24rem) {
+        html {
+            font-size: 14px;
+        }
+
+        .logo {
+            top: 4rem;
+        }
     }
