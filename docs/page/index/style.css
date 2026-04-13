@@ -8,6 +8,7 @@
         box-sizing: border-box;
         padding: 0;
         margin: 0;
+        -webkit-tap-highlight-color: transparent;
     }
 
     html {
@@ -31,8 +32,16 @@
         user-select: none;
         align-content: center;
         flex-wrap: wrap;
-        transition: 0.168s ease;
-        -webkit-tap-highlight-color: transparent;
+        /* transition: 0.168s ease; */
+    }
+
+    input,
+    button {
+        -o-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        outline: none;
+        border: none;
     }
 
     button {
@@ -211,6 +220,7 @@
         /* height: 300px; */
         overflow: hidden;
         width: 100%;
+        -o-mask: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
         -webkit-mask: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
         mask: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
     }
@@ -221,7 +231,8 @@
         display: flex;
         width: 400%;
         will-change: transform;
-        -webkit-mask: linear-gradient(to top, transparent 0%, black 6%, black 94%, transparent 100%);
+        -o-mask: linear-gradient(to top, transparent 0%, black 5%, black 100%);
+        -webkit-mask: linear-gradient(to top, transparent 0%, black 5%, black 100%);
         mask: linear-gradient(to top, transparent 0%, black 5%, black 100%);
     }
 
